@@ -1,9 +1,9 @@
 server:
-  port: 8080
+  port: 8090  # Cambiado de 8080 a 8090
 
 spring:
   datasource:
-    url: jdbc:mysql://mysql8:3306/manager?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://mysql8:3306/manager?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: ${_USER_MYSQL}
     password: ${_PASSWORD_MYSQL}
     driver-class-name: com.mysql.cj.jdbc.Driver
