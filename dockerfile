@@ -1,13 +1,30 @@
-# Imagen base ligera de Java 21
-FROM eclipse-temurin:21-jdk
+# =========================
+# Etapa 1: Build del JAR
+# =========================
+FROM eclipse-temurin:21-jdk AS builder
 
-# Directorio de trabajo dentro del contenedor
+# Directorio de trabajo
 WORKDIR /app
 
-# Copiamos el archivo JAR al contenedor
-COPY clientes-1.jar app.jar
+# Copiamos todo el proyecto
+COPY . .
 
-# Exponemos el puerto (ajústalo al puerto real que use tu app, por ejemplo 8090)
+# Ejecutamos Gradle para construir el JAR
+# --no-daemon evita problemas de demonios de Gradle en CI/CD
+RUN ./gradlew build --no-daemon
+
+# =========================
+# Etapa 2: Imagen final
+# =========================
+FROM eclipse-temurin:21-jdk
+
+# Directorio de trabajo
+WORKDIR /app
+
+# Copiamos el JAR desde la etapa builder
+COPY --from=builder /app/build/libs/*.jar app.jar
+
+# Exponemos el puerto de la app (ajusta si es necesario)
 EXPOSE 8090
 
 # Comando de arranque
