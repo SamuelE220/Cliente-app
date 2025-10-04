@@ -20,11 +20,14 @@ FROM eclipse-temurin:21-jdk
 # Directorio de trabajo
 WORKDIR /app
 
-# Copiamos el JAR desde la etapa builder
-COPY --from=builder /app/build/libs/*.jar app.jar
+# Creamos carpeta para los JARs
+RUN mkdir -p /app/libs
 
-# Exponemos el puerto de la app
+# Copiamos todos los JARs desde la etapa builder
+COPY --from=builder /app/build/libs/*.jar /app/libs/
+
+# Ajusta al nombre exacto de tu JAR principal
+ENTRYPOINT ["java", "-jar", "/app/libs/clientes-1.0-SNAPSHOT.jar"]
+
+# Puerto que usa tu app
 EXPOSE 8090
-
-# Comando de arranque
-ENTRYPOINT ["java", "-jar", "app.jar"]
