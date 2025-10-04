@@ -4,6 +4,9 @@
 FROM eclipse-temurin:21-jdk AS builder
 WORKDIR /app
 COPY . .
+
+# Dar permisos de ejecución al wrapper de Gradle
+RUN chmod +x ./gradlew
 RUN ./gradlew build --no-daemon -x test
 
 # =========================
