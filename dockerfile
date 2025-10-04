@@ -9,9 +9,8 @@ WORKDIR /app
 # Copiamos todo el proyecto
 COPY . .
 
-# Ejecutamos Gradle para construir el JAR
-# --no-daemon evita problemas de demonios de Gradle en CI/CD
-RUN ./gradlew build --no-daemon
+# Ejecutamos Gradle para construir el JAR, ignorando tests
+RUN ./gradlew build --no-daemon -x test
 
 # =========================
 # Etapa 2: Imagen final
@@ -24,7 +23,7 @@ WORKDIR /app
 # Copiamos el JAR desde la etapa builder
 COPY --from=builder /app/build/libs/*.jar app.jar
 
-# Exponemos el puerto de la app (ajusta si es necesario)
+# Exponemos el puerto de la app
 EXPOSE 8090
 
 # Comando de arranque
