@@ -58,6 +58,15 @@ jobs:
             docker rm cliente-1 || true
 
             # Ejecutar el nuevo contenedor con la nueva imagen
-            docker run -d --name cliente-1 -p 8090:8090 cliente-1-image
+            # Ejecutar el nuevo contenedor con la nueva imagen
+            docker run -d \
+              --name cliente-1 \
+              -p 8090:8090 \
+              --memory="512m" \
+              --memory-reservation="512m" \
+              --cpus="0.5" \
+              cliente-1-image
+
+
 
 
