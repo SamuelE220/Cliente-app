@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: Deploy Cliente to VPS
 
 on:
   push:
@@ -25,22 +25,22 @@ jobs:
             echo "SSH_KEY is set ✅"
           fi
 
-      # 3️⃣ Copiar archivos al VPS
+      # 3️⃣ Copiar archivos al VPS (nueva ruta y usuario devops)
       - name: Copy files to VPS
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.HOST_VPS }}
-          username: ${{ secrets.USERNAME_VPS }}
+          username: ${{ secrets.USERNAME_VPS }} # debe ser devops en los secrets
           key: ${{ secrets.SSH_KEY }}
           source: "."
-          target: "/home/ubuntu/clientes-app"
+          target: "/var/www/Cliente-app"
 
-      # 4️⃣ Ejecutar comandos de deploy en VPS
+      # 4️⃣ Ejecutar comandos de deploy en VPS (nueva ruta y permisos)
       - name: Run deploy commands on VPS
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.HOST_VPS }}
-          username: ${{ secrets.USERNAME_VPS }}
+          username: ${{ secrets.USERNAME_VPS }} # debe ser devops
           key: ${{ secrets.SSH_KEY }}
           script: |
             echo "Verificando que estamos en el VPS correcto..."
@@ -48,24 +48,25 @@ jobs:
             pwd
 
             # Navegar a la carpeta del proyecto
-            cd /home/ubuntu/clientes-app
+            cd /var/www/Cliente-app
             
             # Construir la nueva imagen de Docker
-            docker build -t cliente-1-image .
+            docker build -t cliente_image .
 
             # Detener y eliminar el contenedor existente si está corriendo
-            docker stop cliente-1 || true
-            docker rm cliente-1 || true
+            docker stop cliente_container || true
+            docker rm cliente_container || true
 
             # Ejecutar el nuevo contenedor con la nueva imagen
-            # Ejecutar el nuevo contenedor con la nueva imagen
             docker run -d \
-              --name cliente-1 \
+              --name cliente_container \
               -p 8090:8090 \
               --memory="512m" \
               --memory-reservation="512m" \
               --cpus="0.5" \
-              cliente-1-image
+              cliente_image
+
+
 
 
 
