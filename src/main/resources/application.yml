@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://mysql8:3306/manager?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: samuel
-    password: 1234
+    username: root
+    password: SUPERCLAVE
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
